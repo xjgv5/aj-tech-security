@@ -32,4 +32,14 @@ export const soluciones = [
     desc: 'Cableado estructurado, WiFi y servidores para que tu seguridad y tu operación funcionen sin cortes.',
     casos: ['Empresas', 'Edificios', 'Escuelas'],
   },
+  {
+    icon: 'fa-network-wired', title: 'Redes e infraestructura IT', img: img('server,network', 6),
+    desc: 'Cableado estructurado, WiFi y servidores para que tu seguridad y tu operación funcionen sin cortes.',
+    casos: ['Empresas', 'Edificios', 'Escuelas'],
+  },
+  {
+    icon: 'fa-network-wired', title: 'Redes e infraestructura IT', img: img('server,network', 6),
+    desc: 'Cableado estructurado, WiFi y servidores para que tu seguridad y tu operación funcionen sin cortes.',
+    casos: ['Empresas', 'Edificios', 'Escuelas'],
+  },
 ]
