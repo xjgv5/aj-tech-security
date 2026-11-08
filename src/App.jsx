@@ -52,9 +52,9 @@ export default function App() {
           {tab === 'inicio' && <Inicio go={go} />}
           {tab === 'soluciones' && <Soluciones go={go} />}
           {tab === 'contacto' && <Contacto interes={interes} />}
+          <Footer go={go} />
         </motion.main>
       </AnimatePresence>
-      <Footer />
     </MotionConfig>
   )
 }
