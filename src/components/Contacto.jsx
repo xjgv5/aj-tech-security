@@ -13,7 +13,7 @@ const info = [
 export default function Contacto({ interes }) {
   const [sent, setSent] = useState(false)
   const [sol, setSol] = useState(interes || '')
-  const onSubmit = (e) => { e.preventDefault(); setSent(true) } // Conecta aquí EmailJS / Formspree
+  const onSubmit = (e) => { e.preventDefault(); setSent(true) } // Email JS
 
   return (
     <section className="contact">
