@@ -5,7 +5,6 @@ import Clientes from './Clientes'
 import Proceso from './Proceso'
 import Numeros from './Numeros'
 import Testimonios from './Testimonios'
-import Faq from './Faq'
 import CtaFinal from './CtaFinal'
 
 const box = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } } }
@@ -56,7 +55,6 @@ export default function Inicio({ go }) {
       <Proceso />
       <Numeros />
       <Testimonios />
-      <Faq />
       <CtaFinal go={go} />
     </>
   )

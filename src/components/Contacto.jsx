@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { soluciones } from '../data'
 import Select from './Select'
+import Faq from './Faq'
 
 const info = [
   { icon: 'fa-phone', t: '+52 222 000 0000', href: 'tel:+522220000000' },
@@ -13,9 +14,10 @@ const info = [
 export default function Contacto({ interes }) {
   const [sent, setSent] = useState(false)
   const [sol, setSol] = useState(interes || '')
-  const onSubmit = (e) => { e.preventDefault(); setSent(true) } // Email JS
+  const onSubmit = (e) => { e.preventDefault(); setSent(true) } // Conecta aquí EmailJS / Formspree
 
   return (
+    <>
     <section className="contact">
       <div>
         <h2 className="big">Cuéntanos qué necesitas</h2>
@@ -57,5 +59,7 @@ export default function Contacto({ interes }) {
         </form>
       )}
     </section>
+    <Faq />
+    </>
   )
 }

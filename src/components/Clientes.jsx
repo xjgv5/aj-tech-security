@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, animate, motion, useAnimationFrame, useMotionValue } from 'framer-motion'
 import Reveal from './Reveal'
 
 // Clientes y fotos de prueba (picsum). Cambia por los reales: fotos: ['/img/clientes/lomas1.jpg', ...]
@@ -25,6 +25,34 @@ export default function Clientes() {
   const close = () => setSel(null)
   const mover = (d) => c && setIdx((i) => (i + d + c.fotos.length) % c.fotos.length)
 
+  // Carrusel: avanza solo, se arrastra con el dedo o el mouse y tiene flechas en escritorio
+  const track = useRef(null)
+  const W = useRef(0) // ancho de una copia de la lista
+  const x = useMotionValue(0)
+  const pausa = useRef({ hover: false, drag: false, modal: false })
+  const movido = useRef(false)
+  const anim = useRef(null)
+  const [pulso, setPulso] = useState({ l: 0, r: 0 })
+  const norm = (v) => (W.current ? -2 * W.current + ((((v + 2 * W.current) % W.current) + W.current) % W.current) : v)
+  const soltar = () => { pausa.current.drag = false; x.set(norm(x.get())) }
+  const desplazar = (dir) => {
+    anim.current?.stop(); pausa.current.drag = true
+    anim.current = animate(x, x.get() - dir * 380, { type: 'spring', stiffness: 80, damping: 20, onComplete: soltar })
+    setPulso((s) => ({ ...s, [dir > 0 ? 'r' : 'l']: s[dir > 0 ? 'r' : 'l'] + 1 }))
+  }
+  useAnimationFrame((_, d) => {
+    const q = pausa.current
+    if (W.current && !q.hover && !q.drag && !q.modal) x.set(norm(x.get() - (36 * d) / 1000))
+  })
+  useEffect(() => {
+    const el = track.current
+    const medir = () => { const primera = !W.current; W.current = el.scrollWidth / 3; if (primera) x.set(-W.current) }
+    medir()
+    const ro = new ResizeObserver(medir); ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  useEffect(() => { pausa.current.modal = !!c }, [c])
+
   useEffect(() => {
     const k = (e) => {
       if (e.key === 'Escape') close()
@@ -39,18 +67,32 @@ export default function Clientes() {
     return () => { document.body.style.overflow = '' }
   }, [c])
 
-  const lista = [...base, ...base]
+  const lista = [...base, ...base, ...base] // 3 copias para el bucle infinito
   return (
     <Reveal className="sec sec-c">
       <p className="sec-s">Empresas y comunidades que confían en nosotros. Toca una para ver su proyecto.</p>
-      <div className="logos">
-        <div className="logos-track">
-          {lista.map((x, i) => (
-            <button key={i} className="logo-i" onClick={() => { setSel(i % base.length); setIdx(0) }}>
-              <i className={`fa-solid ${x.icon}`} />{x.name}
-            </button>
-          ))}
+      <div className="logos-wrap" onMouseEnter={() => { pausa.current.hover = true }} onMouseLeave={() => { pausa.current.hover = false }}>
+        <button className="arr l" onClick={() => desplazar(-1)} aria-label="Anterior">
+          <span key={`l${pulso.l}`} className="arr-pulse" /><i className="fa-solid fa-chevron-left" />
+        </button>
+        <div className="logos">
+          <motion.div ref={track} className="logos-track" style={{ x }} drag="x" dragMomentum={false} dragElastic={0}
+            onDragStart={() => { movido.current = true; pausa.current.drag = true; anim.current?.stop() }}
+            onDragEnd={(_, info) => {
+              anim.current = animate(x, x.get() + info.velocity.x * 0.4, { type: 'spring', stiffness: 70, damping: 20, onComplete: soltar })
+              setTimeout(() => { movido.current = false }, 60)
+            }}>
+            {lista.map((cl, i) => (
+              <button key={i} className="logo-i" tabIndex={i < base.length ? 0 : -1} aria-hidden={i >= base.length}
+                onClick={() => { if (movido.current) return; setSel(i % base.length); setIdx(0) }}>
+                <i className={`fa-solid ${cl.icon}`} />{cl.name}
+              </button>
+            ))}
+          </motion.div>
         </div>
+        <button className="arr r" onClick={() => desplazar(1)} aria-label="Siguiente">
+          <span key={`r${pulso.r}`} className="arr-pulse" /><i className="fa-solid fa-chevron-right" />
+        </button>
       </div>
 
       {createPortal(

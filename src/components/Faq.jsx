@@ -7,7 +7,7 @@ const preguntas = [
   { q: '¿Puedo ver mis cámaras desde el celular?', a: 'Sí. Configuramos la app para que veas tus cámaras en vivo y recibas alertas desde cualquier lugar.' },
   { q: '¿Ofrecen garantía y mantenimiento?', a: 'Todos los equipos tienen garantía y contamos con planes de mantenimiento para que el sistema siempre funcione.' },
   { q: '¿Atienden residenciales y empresas?', a: 'Sí: casas, comercios, empresas, fraccionamientos y condominios. Cada propuesta se adapta al espacio.' },
-  { q: '¿Cómo pido una cotización?', a: 'Escríbenos desde la pestaña Contacto o por WhatsApp. Te respondemos en menos de 24 horas.' },
+  { q: '¿Cómo pido una cotización?', a: 'Llena el formulario de esta página o escríbenos por WhatsApp. Te respondemos en menos de 24 horas.' },
 ]
 
 export default function Faq() {
