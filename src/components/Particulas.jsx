@@ -9,9 +9,9 @@ const BLUE = '190,210,255'
 const nueva = (lejos) => {
   const r = Math.random()
   return {
-    tipo: r < 0.55 ? 'punto' : r < 0.67 ? 'cruz' : r < 0.85 ? 'icono' : 'codigo',
+    tipo: r < 0.7 ? 'punto' : r < 0.84 ? 'cruz' : 'icono',
     x: Math.random() * 2 - 1, y: Math.random() * 2 - 1,
-    z: lejos ? 1 : Math.random() * 0.97 + 0.03, v: 0.07 + Math.random() * 0.1,
+    z: lejos ? 1 : Math.random() * 0.97 + 0.03, v: 0.05 + Math.random() * 0.07,
     g: ICONOS[(Math.random() * ICONOS.length) | 0], t: CODIGOS[(Math.random() * CODIGOS.length) | 0],
   }
 }
@@ -24,7 +24,7 @@ export default function Particulas() {
     const canvas = cv.current
     const ctx = canvas.getContext('2d')
     const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const ps = Array.from({ length: 110 }, () => nueva(false))
+    const ps = Array.from({ length: 45 }, () => nueva(false))
     const m = { x: 0, y: 0, sx: 0, sy: 0 }
     const cs = getComputedStyle(probe.current) // toma la fuente real de Font Awesome (v6 o v7)
     let w = 0, h = 0, raf = 0, last = 0, visible = true, vivo = true
@@ -46,7 +46,7 @@ export default function Particulas() {
         p.z -= p.v * dt
         const sx = cx + (p.x * k) / p.z, sy = cy + (p.y * k) / p.z
         if (p.z < 0.03 || sx < -60 || sx > w + 60 || sy < -60 || sy > h + 60) { Object.assign(p, nueva(true)); continue }
-        const a = Math.min(1, (1 - p.z) * 4) * Math.min(1, (p.z - 0.03) * 10) * 0.85
+        const a = Math.min(1, (1 - p.z) * 4) * Math.min(1, (p.z - 0.03) * 10) * 0.5
         const sc = Math.min(1 / p.z, 14)
         if (p.tipo === 'punto') {
           const z0 = p.z + p.v * 0.3
@@ -57,8 +57,8 @@ export default function Particulas() {
           ctx.strokeStyle = `rgba(255,255,255,${a})`; ctx.lineWidth = 1
           ctx.beginPath(); ctx.moveTo(sx - s, sy); ctx.lineTo(sx + s, sy); ctx.moveTo(sx, sy - s); ctx.lineTo(sx, sy + s); ctx.stroke()
         } else if (p.tipo === 'icono') {
-          ctx.font = `${cs.fontWeight} ${Math.min(8 * sc, 54)}px ${cs.fontFamily}`
-          ctx.fillStyle = `rgba(${MINT},${a})`; ctx.shadowColor = `rgba(${MINT},.6)`; ctx.shadowBlur = 12
+          ctx.font = `${cs.fontWeight} ${Math.min(6 * sc, 36)}px ${cs.fontFamily}`
+          ctx.fillStyle = `rgba(${MINT},${a})`; ctx.shadowColor = `rgba(${MINT},.6)`; ctx.shadowBlur = 8
           ctx.fillText(p.g, sx, sy); ctx.shadowBlur = 0
         } else {
           ctx.font = `${Math.min(6 * sc, 17)}px ui-monospace, Menlo, monospace`

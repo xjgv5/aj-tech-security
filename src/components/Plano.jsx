@@ -9,7 +9,7 @@ const muros = [
   'M250 190 V280',                       // oficinas
 ]
 const camaras = [{ x: 34, y: 34, r: 45 }, { x: 215, y: 30, r: 62 }, { x: 305, y: 268, r: -148 }]
-const sensores = [[100, 255], [260, 60], [440, 40], [210, 240]]
+const sensores = [[100, 255], [440, 40]]
 const puertas = [[170, 145], [395, 150]]
 const ruta = [[14, 150], [170, 145], [250, 145], [395, 150], [395, 90], [395, 50]]
 const eventos = [
@@ -51,7 +51,6 @@ export default function Plano() {
         initial={{ y: 70, opacity: 0, scale: 0.94 }} animate={{ y: 0, opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 60, damping: 14, delay: 0.25 }}>
         <div className="p-bar">
-          <span className="p-dots"><i /><i /><i /></span>
           <span>Torre B · Planta baja</span>
           <span className="p-live"><span className="live" />En vivo</span>
         </div>
@@ -59,7 +58,7 @@ export default function Plano() {
         <svg className="plano" viewBox="0 0 480 300">
           <defs>
             <linearGradient id="fov" x1="0" x2="1">
-              <stop offset="0" stopColor="#8fd9b6" stopOpacity=".42" /><stop offset="1" stopColor="#8fd9b6" stopOpacity="0" />
+              <stop offset="0" stopColor="#8fd9b6" stopOpacity=".28" /><stop offset="1" stopColor="#8fd9b6" stopOpacity="0" />
             </linearGradient>
           </defs>
           <motion.rect x="330" y="20" width="130" height="130" rx="6" fill="#0f7a55"
@@ -68,8 +67,6 @@ export default function Plano() {
             <motion.path key={d} d={d} fill="none" stroke="rgba(150,175,230,.55)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
               initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, delay: 0.2 + i * 0.25, ease: 'easeInOut' }} />
           ))}
-          <text className="plbl" x="34" y="270">Lobby</text>
-          <text className="plbl" x="184" y="270">Pasillo</text>
           <text className="plbl" x="340" y="138">Servidores</text>
 
           {camaras.map((c, i) => (
@@ -101,15 +98,9 @@ export default function Plano() {
             transition={{ cx: mueve, cy: mueve, opacity: { duration: 0.5 } }} />
         </svg>
 
-        <div className="p-stats">
-          <div><b>3/3</b>cámaras en línea</div>
-          <div><b>2</b>accesos protegidos</div>
-          <div><b>0</b>alertas activas</div>
-        </div>
-
         <div className="p-log">
           <AnimatePresence mode="popLayout" initial={false}>
-            {[n, n - 1, n - 2].filter((id) => id >= 0).map((id) => {
+            {[n, n - 1].filter((id) => id >= 0).map((id) => {
               const e = eventos[id % 6]
               return (
                 <motion.div key={id} layout className="p-ev" initial={{ opacity: 0, y: -24, scale: 0.94 }}

@@ -22,7 +22,7 @@ export default function Soluciones({ go }) {
   const [f, setF] = useState('todas')
   const close = () => setSel(null)
   const s = sel !== null ? soluciones[sel] : null
-  const lista = soluciones.map((x, i) => ({ ...x, i })).filter((x) => f === 'todas' || x.tipo.includes(f))
+  const lista = soluciones.map((x, i) => ({ ...x, i })).filter((x) => f === 'todas' || (x.tipo || []).includes(f))
 
   useEffect(() => {
     const k = (e) => e.key === 'Escape' && close()
@@ -101,14 +101,14 @@ export default function Soluciones({ go }) {
                 <button className="x" onClick={close} aria-label="Cerrar"><i className="fa-solid fa-xmark" /></button>
                 <motion.div className="m-body" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   transition={{ delay: 0.2, type: 'spring', stiffness: 120, damping: 18 }}>
-                  <div className="tags">{s.tipo.map((t) => <span key={t}>{etiqueta[t]}</span>)}</div>
+                  <div className="tags">{(s.tipo || []).map((t) => <span key={t}>{etiqueta[t]}</span>)}</div>
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
                   <p>{s.detalle}</p>
                   <h4>Qué incluye</h4>
-                  <ul className="inc">{s.incluye.map((x) => <li key={x}><i className="fa-solid fa-circle-check" />{x}</li>)}</ul>
+                  <ul className="inc">{(s.incluye || []).map((x) => <li key={x}><i className="fa-solid fa-circle-check" />{x}</li>)}</ul>
                   <h4>Ideal para</h4>
-                  <div className="tags">{s.casos.map((c) => <span key={c}>{c}</span>)}</div>
+                  <div className="tags">{(s.casos || []).map((c) => <span key={c}>{c}</span>)}</div>
                   <button className="btn fill" onClick={() => { close(); go('contacto', s.title) }}>Cotizar esta solución</button>
                 </motion.div>
               </motion.div>
